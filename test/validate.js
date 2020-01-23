@@ -353,8 +353,22 @@ describe('validate', function() {
 				done();
 			});
 		});
+		it('should convert string values into numbers if string contains a E notation.', function(done) {
+			isvalid('5.8e-7', Number, function(err, validData) {
+				expect(err).to.be.null;
+				expect(validData).to.equal(5.8e-7);
+				done();
+			});
+		});
 		it ('should come back with error if string is supplied - but not a number.', function(done) {
 			isvalid('abc', Number, function(err, validData) {
+				expect(err).to.be.instanceof(ValidationError);
+				expect(err).to.have.property('validator').equal('type');
+				done();
+			});
+		});
+		it('should come back with error if wrong E notation is supplied - but not a number.', function(done) {
+			isvalid('12e', Number, function(err, validData) {
 				expect(err).to.be.instanceof(ValidationError);
 				expect(err).to.have.property('validator').equal('type');
 				done();
